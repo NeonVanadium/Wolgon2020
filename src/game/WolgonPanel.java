@@ -47,6 +47,7 @@ class WolgonPanel extends JPanel {
     public void update() {
     	
     	text = Main.getCurTime();
+    	this.setBackground(Main.getCurColor()); 
     	repaint();
     	
     }
@@ -77,7 +78,7 @@ class WolgonPanel extends JPanel {
     	switch(a) {
     	
     	case Top:
-    		return buffer + halfLineHeight;
+    		return buffer + halfLineHeight + buffer;
     	case Bottom:
     		return Main.HEIGHT - (halfLineHeight + buffer);
     	case VCenter:

@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.Color;
+
 public class GameClock {
 	
 	private String mode = "12"; //12 or 24.
@@ -100,6 +102,65 @@ public class GameClock {
 			
 		}
 		
+	}
+	
+	//TODO
+	//generates the sky color based on the time of day.
+	public Color getSkyColor() {
+		
+		int R = 0, G = 40, B = 200;
+		
+		R = getRed();
+		G = getGreen();
+		B = getBlue();
+		
+		return new Color(R, G, B);
+		
+	}
+	
+	private int getRed() {
+		
+		double R = -30 * Math.pow(detailedHour((hour % 12), minute, ticks) - 6.5, 2) + 50;
+		
+		if(R < 0) {
+			return 0;
+		}
+		else {
+			return (int) R;
+		}
+		
+	}
+	
+	private int getGreen() {
+		
+		return getBlue() / 2;
+		
+	}
+	
+	private int getBlue() {
+		
+		double B = -4.2 * Math.pow(detailedHour() - 13, 2) + 255; 
+		
+		if(B < 0) {
+			return 0;
+		}
+		else {
+			return (int) B;
+		}
+		
+	}
+	
+	
+	
+	//similar to getHour() but with minutes and ticks included as decimals. Note: on 24 hour time.
+	private double detailedHour(int atHour, int atMinute, int atTicks) {
+		
+		return atHour + ((double) atMinute / 60) + ((double) ticks / (60 * ticksPerMinute));
+		
+	}
+	
+	private double detailedHour() {
+		return detailedHour(hour, minute, ticks);
 	}
 
 }

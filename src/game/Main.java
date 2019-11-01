@@ -17,7 +17,7 @@ public class Main {
 	private static JFrame frame = new JFrame();
 	private static WolgonPanel panel = new WolgonPanel();
 	
-	private static GameClock c = new GameClock(7, 0, 10);
+	private static GameClock c = new GameClock(17, 30, 1);
 	
 	private static Timer t = new Timer(100, new ActionListener() {
 
@@ -51,6 +51,11 @@ public class Main {
 	
 	public static String getCurTime() {
 		return c.getTime();
+	}
+	
+	public static Color getCurColor() {
+		//System.out.println(c.getSkyColor());
+		return c.getSkyColor();
 	}
 	
 
