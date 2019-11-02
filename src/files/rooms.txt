@@ -1,0 +1,9 @@
+ROOM 1
+Gan: Town Square
+Wooden buildings surround a cobblestone plaza. In the center stands a crier's platform, and a ways behind that, beyond a guarded gate, is the mayoral estate.
+South,2;
+
+ROOM 2
+Gan: Outskirts
+There are many small, wooden houses, perhaps more like huts, built seemingly at random. Well-trodden dirt roads lead all around the place, along the grassy soil.
+North,1;

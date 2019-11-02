@@ -66,10 +66,10 @@ public class GameClock {
 			time += ":" + formatMinute();
 			
 			if(hour < 12) {
-				time += "AM";
+				time += " AM";
 			}
 			else {
-				time += "PM";
+				time += " PM";
 			}
 			
 			return time;
@@ -141,8 +141,8 @@ public class GameClock {
 		
 		double B = -4.2 * Math.pow(detailedHour() - 13, 2) + 255; 
 		
-		if(B < 0) {
-			return 0;
+		if(B < 30) {
+			return 30;
 		}
 		else {
 			return (int) B;
