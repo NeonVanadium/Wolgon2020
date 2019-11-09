@@ -36,7 +36,6 @@ public class Main {
 		setupFrame();
 		//load game (far future)
 		loadRooms();
-		panel.displayRoomData(rooms.get(player.curRoom));
 		t.start();
 		
 	}
@@ -45,14 +44,12 @@ public class Main {
 	private static void setupFrame() {
 		frame.setBounds(BOUNDS);
 		frame.setBackground(Color.BLACK);
-		frame.setTitle("WOLGON 2020");
-		
+		frame.setTitle("WOLGON 2020");	
+		frame.setMinimumSize(new Dimension(500, 500));
+		panel.setMinimumSize(new Dimension(500, 500));
 		panel.setFocusable(true);
-		
-		frame.add(panel);
-		
+		frame.add(panel);	
 		frame.setVisible(true);
-		
 	}
 	
 	private static void loadRooms() {
@@ -97,6 +94,10 @@ public class Main {
 		else {
 			t.start();
 		}
+	}
+	
+	public static Rectangle getBounds() {
+		return frame.getBounds();
 	}
 	
 
