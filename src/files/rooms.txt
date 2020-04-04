@@ -1,9 +1,41 @@
+ROOM 0
+Nowhere
+Nothing but grey, endless void in all directions. You float weightlessly.
+Away,0;
+nothingness
+
 ROOM 1
 Gan: Town Square
-Wooden buildings surround a cobblestone plaza. In the center stands a crier's platform, and a ways behind that, beyond a guarded gate, is the mayoral estate.
+Wooden buildings surround a cobblestone plaza. In the center stands a wooden crier's platform. Beyond a guarded, iron-bar gate, stands the mayoral house.
 South,2;
+a moderately busy town plaza
 
 ROOM 2
 Gan: Outskirts
-There are many small, wooden houses, perhaps more like huts, built seemingly at random. Well-trodden dirt roads lead all around the place, along the grassy soil.
-North,1;
+There are many small, wooden houses, perhaps more like huts, built seemingly at random. Well-trodden dirt roads lead around the place, through grassy soil.
+North,1;South,3;
+wooden houses, spread a fair distance apart
+
+ROOM 3
+Gan: Till River Shelf 
+A gravelly road atop a steep, grassy river shelf on the north side of the Till River 
+North,2;South,5;Down,4;
+a gravelly road
+
+ROOM 4
+Till River - Near Gan
+A clear-water river, a few feet deep. It flows calmly but steadily.
+South,6;
+a clear river
+
+ROOM 5
+Till River Bridge
+A sturdy, pleasant-looking wooden bridge crossing about twenty yards of clear river-water.
+North,3;South,6;
+a sturdy wooden bridge
+
+ROOM 6
+Till River Bank 
+A dirt road and a pebbly riverbank.
+North,5;
+a well-taken forest road

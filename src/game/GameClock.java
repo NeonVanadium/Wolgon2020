@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class GameClock {
 	
-	private String mode = "12"; //12 or 24.
+	private int mode = 12; //12 or 24.
 	private int hour; // [0, 23]
 	private int minute; // [0, 59]
 	private int ticks = 0; // [0, ticksPerMinute]
@@ -19,8 +19,8 @@ public class GameClock {
 	}
 	
 	//changes the clock mode between 12- and 24-hour time.
-	public void setMode(String to) throws Exception {
-		if(to == "12" || to == "24") {
+	public void setMode(int to) throws IllegalArgumentException {
+		if(to == 12 || to == 24) {
 			mode = to;
 		}
 		else {
@@ -50,7 +50,7 @@ public class GameClock {
 	//returns a string representing the clock.
 	public String getTime() {
 		
-		if(mode == "24") {
+		if(mode == 24) {
 			return hour + ":" + formatMinute();
 		}
 		else {
@@ -78,34 +78,26 @@ public class GameClock {
 	}
 	
 	//increments time by one
-	public void incrementTime() {
-		
+	public void incrementTime() {	
 		ticks++;
 		
-		if(ticks == ticksPerMinute){
-			
+		if (ticks == ticksPerMinute){	
 			ticks = 0;
 			minute++;
 			
-			if(minute == 60) {
-				
+			if (minute == 60) {		
 				minute = 0;
 				hour++;
 				
-				if(hour == 24) {
-					
-					hour = 0;
-					
-				}
-				
-			}
-			
-		}
-		
+				if (hour == 24) {	
+					hour = 0;				
+				}		
+			}		
+		}	
 	}
 	
-	//TODO
-	//generates the sky color based on the time of day.
+
+	// generates the sky color based on the time of day.
 	public Color getSkyColor() {
 		
 		int R = 0, G = 40, B = 200;
@@ -152,7 +144,7 @@ public class GameClock {
 	
 	
 	
-	//similar to getHour() but with minutes and ticks included as decimals. Note: on 24 hour time.
+	// similar to getHour() but with minutes and ticks included as decimals. Note: on 24 hour time.
 	private double detailedHour(int atHour, int atMinute, int atTicks) {
 		
 		return atHour + ((double) atMinute / 60) + ((double) ticks / (60 * ticksPerMinute));

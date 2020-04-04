@@ -6,7 +6,6 @@ public class GameCharacter {
 	
 	public void changeRoom(int to) {
 		curRoom = to;
-		System.out.println("SWITCH");
 	}
 	
 }

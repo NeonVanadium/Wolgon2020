@@ -11,33 +11,30 @@ import javax.swing.Timer;
 
 public class Main {
 
-	public static final Rectangle BOUNDS = new Rectangle(0, 0, 1000, 800); //i'm sure this isn't good form but it is convenient.
+	public static final Rectangle BOUNDS = new Rectangle(0, 0, 1000, 800); // i'm sure this isn't good form but it is convenient.
+	public static final Dimension MIN_SIZE = new Dimension(500, 500);
 	public static final int TICK = 100; // how long a tick is, in milliseconds.
-	protected static Hashtable<Integer, Room> rooms = new Hashtable<Integer, Room>();
 	
+	private static Hashtable<Integer, Room> rooms = new Hashtable<Integer, Room>();
 	private static JFrame frame = new JFrame();
-	private static WolgonPanel panel = new WolgonPanel();
 	
 	//start hour (0-23), start minute, ticks-per-minute
 	private static GameClock c = new GameClock(7, 00, 10);
 	
 	private static Timer t = new Timer(TICK, new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				c.incrementTime();
-				panel.update();
+				getCurPanel().update();
 			}
 		});
 	
 	protected static GameCharacter player = new GameCharacter();
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) {	
 		setupFrame();
-		//load game (far future)
+		//TODO: load game (far future)
 		loadRooms();
 		t.start();
-		
 	}
 	
 	//initializes the frame and the panel
@@ -45,10 +42,7 @@ public class Main {
 		frame.setBounds(BOUNDS);
 		frame.setBackground(Color.BLACK);
 		frame.setTitle("WOLGON 2020");	
-		frame.setMinimumSize(new Dimension(500, 500));
-		panel.setMinimumSize(new Dimension(500, 500));
-		panel.setFocusable(true);
-		frame.add(panel);	
+		setPanel(new WorldPanel());
 		frame.setVisible(true);
 	}
 	
@@ -87,8 +81,28 @@ public class Main {
 		return c.getSkyColor();
 	}
 	
+	public static Room getCurRoom() {
+		return rooms.get(player.curRoom);
+	}
+	
+	// returns the id of the player's current room
+	public static int getCurRoomId() {
+		return player.curRoom;
+	}
+	
+	// retrieves the room with the provided id from the room Hashtable
+	public static Room getRoom(int id) {
+		return rooms.get(id);
+	}
+	
+	// adds a new room to the room Hashtable
+	public static void putRoom(int id, Room value) {
+		rooms.put(id, value);
+	}
+	
+	//stops or starts the timer
 	public static void togglePause() {
-		if(t.isRunning()) {
+		if (t.isRunning()) {
 			t.stop();
 		}
 		else {
@@ -98,6 +112,38 @@ public class Main {
 	
 	public static Rectangle getBounds() {
 		return frame.getBounds();
+	}
+	
+	public static void changeRoom(int toID) {
+		//things like the room change sfx, time changes (from walking), and checks for random encounters will occur here
+		//should also include the blackout-fade-in effect
+		
+		player.changeRoom(toID);
+	}
+
+	public static String handleTyping(String on, String keycode) {
+		if (!on.isEmpty() && keycode == "Backspace") {
+			return on.substring(0, on.length() - 1);
+		}
+		else if (keycode.length() == 1) {
+			return on + keycode;
+		}
+		else {
+			return on;
+		}
+		
+	}
+	
+	public static void setPanel(AWolgonPanel p) {
+		togglePause();
+		frame.getContentPane().removeAll();
+		frame.getContentPane().add(p);
+		frame.revalidate();
+		togglePause();
+	}
+	
+	public static AWolgonPanel getCurPanel() {
+		return (AWolgonPanel) frame.getContentPane().getComponent(0);
 	}
 	
 
