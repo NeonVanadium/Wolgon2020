@@ -8,69 +8,75 @@ import javax.swing.*;
 
 import game.Label;
 
-// a panel designed for a specific portion of gameplay (word, menu, etc)
+// an abstract panel designed for a specific portion of gameplay (world, menu, etc)
 abstract class AWolgonPanel extends JPanel {
-
-	private static final long serialVersionUID = 1L; //Do not know what this does beyond getting rid of yellow squiggle.
 	
-	private Hashtable<String, Zone> zones = new Hashtable<String, Zone>();
-	private Hashtable<String, Label> labels = new Hashtable<String, Label>();
+	private static final long serialVersionUID = 1L;
+	private HashMap<String, Zone> zones = new HashMap<String, Zone>();
+	private HashMap<String, Label> labels = new HashMap<String, Label>();
 
-	private boolean resized = true; // if the panel was resized this frame. Starts true so all positioners are called on startup.
+	private boolean resized = true; // if the panel was resized last frame. Starts true so all positioners are called on startup.
 	private Point lastMousePosition; // position of mouse last frame
 	private Label hoveredOver; // the label currently hovered over by the mouse, if any.
 
-	public static final int BUFFER = 20; // size of the whitespace buffer around the panel and all subzones
+	public static final int BUFFER = 20; // size of the whitespace buffer for the top w
 	public static final float DEFAULT_FONT_SIZE = 30f;
+	
+	protected UserTypeLabel typeBox; // a pointer to the on-panel typable label, if present
+	protected Label hoverTextBox; // a label to hold any text that pops up when a button is hovered over
 	
 
 	public AWolgonPanel() {
 
 		this.setMinimumSize(Main.MIN_SIZE);
 		this.setFocusable(true);
+		this.setBackground(Color.DARK_GRAY);
 
 		// this zone represents the entire panel
 		addZone("Whole", new Zone(0, 0));
 
-		addKeyListener( new KeyListener() {
+		this.addKeyListener( new KeyListener() {
 			public void keyTyped(KeyEvent e) {
-				//nothing
+				// nothing
 			}
 
 			public void keyPressed(KeyEvent e) {
-
-				//TODO: Handle typing on MenuPanel instead, allow this chunk to be overriden (call abstract method?)
-
-				String keyText = KeyEvent.getKeyText(e.getKeyCode());
-
-				Label typeBox = getLabel("TYPE_BOX");
-
-				typeBox.setText(Main.handleTyping(typeBox.getText(), keyText));
-
-				if(keyText == "Escape") {
-					Main.togglePause();
-				}
-				else if(keyText == "Enter") {
-					Main.getCurRoom().checkExit(typeBox.getText());
+				System.out.println("1");
+				// TODO: find out why this doesnt work on other panels
+				if (typeBox != null) {
+					System.out.println("Got here.");
+					keyHandler(e);
 				}
 
 			}
 
 			public void keyReleased(KeyEvent e) {
-				//nothing
+				// nothing
 			}       		
 		});
 
-		addMouseListener( new MouseAdapter() {	
+		this.addMouseListener( new MouseAdapter() {	
 			public void mouseClicked(MouseEvent e) {	
-				System.out.println("Clicked");
-				Main.setPanel(new MenuPanel());
+				if (hoveredOver != null) {
+					hoveredOver.runFunction();
+				}
 			}		
 		});
 
 		this.addMouseMotionListener( new MouseMotionListener() {
 			public void mouseMoved(MouseEvent e) {
 				setLastMousePosition(e.getPoint());
+				
+				// TODO: this is a temporary, slow solution. Optimize.
+				for (Label l : labels.values()) {
+					if (l.contains(e.getPoint())) {
+						hoveredOver = l;
+						l.hover();
+					}
+					else {
+						l.unhover();
+					}
+				}
 			}
 
 			public void mouseDragged(MouseEvent e) {
@@ -83,10 +89,15 @@ abstract class AWolgonPanel extends JPanel {
 				setResized(true);
 			}	
 		});	
+		
+		
 	}
 
-	//redraws the panel and does whatever needs be done each frame
+	// redraws the panel and does whatever needs be done each frame
 	public abstract void update();
+	
+	// allows overriding of the behavior in the keyListener
+	public abstract void keyHandler(KeyEvent e);
 
 	//draws the panel
 	public void paintComponent(Graphics g) {
@@ -95,13 +106,9 @@ abstract class AWolgonPanel extends JPanel {
 		g.setFont(g.getFont().deriveFont(DEFAULT_FONT_SIZE));
 		g.setColor(Color.WHITE);
 
-		//displayRoomData(Main.player.curRoom);
-
-		Iterator<Label> labelIterator = labels.elements().asIterator();
-
-		while (labelIterator.hasNext()) {
-			labelIterator.next().draw(g);
-		}
+		for (Label l : labels.values()) {
+			l.draw(g);
+		}		
 	}
 
 	protected void addZone(String key, Zone value) {
@@ -145,7 +152,5 @@ abstract class AWolgonPanel extends JPanel {
 	public void setLabelText(String labelName, String newText){
 		labels.get(labelName).setText(newText);
 	}
-
-
 
 }

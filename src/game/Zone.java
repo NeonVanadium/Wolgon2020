@@ -1,10 +1,5 @@
 package game;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Point;
-
 // TODO: Allow setting of right and bottom limits instead of just top and left. Will help center text.
 class Zone implements IPositioner {
 
@@ -33,6 +28,7 @@ class Zone implements IPositioner {
 		return Main.getBounds().height - getY();
 	}
 
+	// the x value at which this zone starts
 	public int getX() {
 		if(parent == null) {
 			return AWolgonPanel.BUFFER + (int) (Main.getBounds().width * XFraction);
@@ -43,6 +39,7 @@ class Zone implements IPositioner {
 
 	}
 
+	// the y value at which this zone starts
 	public int getY() {
 		if(parent == null) {
 			return AWolgonPanel.BUFFER + (int) (Main.getBounds().height * YFraction);

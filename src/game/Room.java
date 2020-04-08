@@ -29,8 +29,12 @@ public class Room {
 			return destinationId;
 		}
 		
-		public void take() {
-			
+		public ButtonFunction takeExit() {
+			return new ButtonFunction() { 
+				public void run() {
+					Main.player.changeRoom(destinationId);
+				}
+			};
 		}
 		
 	}
@@ -66,6 +70,16 @@ public class Room {
 	
 	public String getDesc() {
 		return desc;
+	}
+	
+	public void addExitButtonsTo(WorldPanel p) {
+		String curParentName = "EXITS"; // name of the parent button of the next button to be made
+		for (Exit e : exits) {
+			String uppercaseName = e.getName().toUpperCase();
+			new Button(uppercaseName, e.getName(), 20f, curParentName, p, e.takeExit(), 
+					Main.getRoom(e.destinationId).afarDesc);
+			curParentName = uppercaseName;
+		}
 	}
 	
 	public String getExitNames() {

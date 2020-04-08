@@ -10,7 +10,7 @@ class Label implements IPositioner {
 
 	private String text;
 	private String wrappedText;
-	private Label parent = null;
+	private Label parent;
 	private AlignmentLocation vert;
 	private AlignmentLocation horz;
 	private Color color; //text color
@@ -19,7 +19,8 @@ class Label implements IPositioner {
 	private int height; //how tall the label is
 	private Zone zone;
 	private boolean textChanged = true; //has the text changed since the previous wrapping? If true, wrapText will be called
-	private int trueTop; // since the y position of the label is below the first line, this stores the y-coord above the first line, for use in contains.
+	private int trueTop; 	// since the y position of the label is below the first line, 
+							// this stores the y-coord above the first line, for use in contains.
 
 	// abstraction constructor
 	private Label(String name, String text, Color color, float fontSize, AWolgonPanel panel) {
@@ -29,7 +30,7 @@ class Label implements IPositioner {
 		panel.addLabel(name, this);
 	}
 	
-	//Positions label relative to one of the AlignmentLocations (see enum in Label) of its zone
+	// Positions label relative to one of the AlignmentLocations (see enum in Label) of its zone
 	public Label(String name, String text, Color color, float fontSize,
 			AlignmentLocation horz, AlignmentLocation vert, String zoneName, AWolgonPanel panel) {
 		
@@ -39,7 +40,7 @@ class Label implements IPositioner {
 		this.vert = vert;
 	}
 
-	//Positions label below an existing label.
+	// Positions label below an existing label.
 	public Label(String name, String text, Color color, float fontSize, String otherLabelName, AWolgonPanel panel) {
 		this(name, text, color, fontSize, panel);
 		this.parent = panel.getLabel(otherLabelName);
@@ -171,7 +172,7 @@ class Label implements IPositioner {
 		}
 		else {
 			return parent.getY() + parent.height;
-			//TODO: modify get aligned coord to take a label not a string
+			//TODO: modify get aligned coords to take an IPositioner
 		}
 	}
 
@@ -181,9 +182,9 @@ class Label implements IPositioner {
 
 		switch(vert) {
 		case Top:
-			return zone.getY() + AWolgonPanel.BUFFER;
+			return zone.getY() + 2 * AWolgonPanel.BUFFER;
 		case Bottom:
-			return (zone.getY() + zone.getHeight()) - (halfLineHeight + AWolgonPanel.BUFFER);
+			return (zone.getY() + zone.getHeight()) - (halfLineHeight + 2 * AWolgonPanel.BUFFER);
 		case VCenter:
 			return ((zone.getY() + zone.getHeight()) / 2) - halfLineHeight;
 		default:
@@ -195,15 +196,14 @@ class Label implements IPositioner {
 
 		switch(horz) {
 
-		//case HCenter:
-		//return ((zone.getX() + zone.getWidth()) / 2) - (StringLengthInPixels(l.text) / 2);
+		case HCenter:
+			return ((zone.getX() + zone.getWidth()) / 2) - (getWidth() / 2);
 		case Left:
-			return zone.getX() + AWolgonPanel.BUFFER;
-			//case Right:
-			//return (zone.getX() + zone.getWidth()) - StringLengthInPixels(txt) - BUFFER;
+			return zone.getX(); 
+		case Right:
+			return (zone.getX() + zone.getWidth()) - getWidth() ;
 		default:
 			return 0;
-
 		}
 	}
 
@@ -219,14 +219,19 @@ class Label implements IPositioner {
 		return height;
 	}
 	
-	// to be called when the mouse hovers over this label. Empty on this class, but will be overridden on subclass Button.
+	// to be called when the mouse moves over this label. Empty on this class, but will be overridden on subclass Button.
 	public void hover() {
-		// nothing;
+		// nothing
 	}
 	
 	// to be called when the mouse moves off this label. Empty on this class, but will be overriden on subclass button.
 	public void unhover() {
-		
+		// nothing
+	}
+	
+	// empty on this class, used on button subclass to call its stored function to be run
+	public void runFunction() { 
+		// nothing
 	}
 
 }

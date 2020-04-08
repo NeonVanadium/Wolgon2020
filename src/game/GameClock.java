@@ -10,12 +10,10 @@ public class GameClock {
 	private int ticks = 0; // [0, ticksPerMinute]
 	private int ticksPerMinute; //how many clock ticks per in-game minute
 	
-	public GameClock(int startHour, int startMinute, int tpm) {
-		
+	public GameClock(int startHour, int startMinute, int tpm) {	
 		hour = startHour;
 		minute = startMinute;
 		ticksPerMinute = tpm;
-		
 	}
 	
 	//changes the clock mode between 12- and 24-hour time.
