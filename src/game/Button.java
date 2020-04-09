@@ -9,6 +9,7 @@ class Button extends Label {
 	private String hoverText; 	// when hovered over, if the panel has a designated button hover label, 
 								// this text will show there
 
+
 	// no parent, no hover text
 	public Button(String name, String text, float fontSize, AlignmentLocation horz, AlignmentLocation vert,
 			String zoneName, AWolgonPanel panel, ButtonFunction function) {
@@ -49,7 +50,7 @@ class Button extends Label {
 
 	public void unhover() {
 		this.setTextColor(Color.WHITE);
-		if (panel.hoverTextBox != null && !panel.hoverTextBox.getText().isEmpty()) {
+		if (panel.hoverTextBox != null) {
 			panel.hoverTextBox.setText("");
 		}
 	}
@@ -59,5 +60,7 @@ class Button extends Label {
 			function.run();
 		}
 	}
+	
+	
 }
 

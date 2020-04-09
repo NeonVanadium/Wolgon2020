@@ -1,11 +1,9 @@
 The more members in your party, the more likely you are to experience wild encounters.
 
 TODO:
-- Find a way to remove the exit buttons (or buttons in general) from the WorldPanel when the room changes
-		(so they can be replaced)
-- Overhaul Zones
-	- Instead of Zone objects, each AWolgonPanel has one big "Zone Board"
-	- A function call will create a new zone by providing a rectangle which will fill space on that Zone Board
-		- Allow it to be done via a ratio as is now, as opposed to raw values
-		- This may save on overhead, and will allow better control of zones (left bounds plz)
-	- OPTIONAL, LOW PRIORITY: Allow Labels to appear to the left of their parent as opposed to just below.3
+
+	-	EventPanel
+	- 	Optimize draw (label and or AWolgonPanel, I guess both) so that labels aren't being repositioned without 
+		anything changing
+	- 	Automatically adjust text sizes to stay somewhat consistent with window size
+	-	Objects, even if they can only be looked at (eg the crier's platform in Gan Square)

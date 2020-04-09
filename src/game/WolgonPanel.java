@@ -9,22 +9,25 @@ import javax.swing.*;
 import game.Label;
 
 // an abstract panel designed for a specific portion of gameplay (world, menu, etc)
-abstract class AWolgonPanel extends JPanel {
-	
+abstract class AWolgonPanel extends JPanel implements IRectangle {
+
 	private static final long serialVersionUID = 1L;
 	private HashMap<String, Zone> zones = new HashMap<String, Zone>();
 	private HashMap<String, Label> labels = new HashMap<String, Label>();
+	
+	// initialized by other classes only. Names of the labels that need to be removed on update
+	protected String[] tempLabelNames; 
 
-	private boolean resized = true; // if the panel was resized last frame. Starts true so all positioners are called on startup.
-	private Point lastMousePosition; // position of mouse last frame
+	// if the panel was resized last frame. Starts true so all positioners are called on startup.
+	private boolean resized = true; 
 	private Label hoveredOver; // the label currently hovered over by the mouse, if any.
 
-	public static final int BUFFER = 20; // size of the whitespace buffer for the top w
+	public static final int BUFFER = 20; // size of the whitespace buffer for the edges of all zones
 	public static final float DEFAULT_FONT_SIZE = 30f;
-	
+
 	protected UserTypeLabel typeBox; // a pointer to the on-panel typable label, if present
 	protected Label hoverTextBox; // a label to hold any text that pops up when a button is hovered over
-	
+
 
 	public AWolgonPanel() {
 
@@ -33,27 +36,7 @@ abstract class AWolgonPanel extends JPanel {
 		this.setBackground(Color.DARK_GRAY);
 
 		// this zone represents the entire panel
-		addZone("Whole", new Zone(0, 0));
-
-		this.addKeyListener( new KeyListener() {
-			public void keyTyped(KeyEvent e) {
-				// nothing
-			}
-
-			public void keyPressed(KeyEvent e) {
-				System.out.println("1");
-				// TODO: find out why this doesnt work on other panels
-				if (typeBox != null) {
-					System.out.println("Got here.");
-					keyHandler(e);
-				}
-
-			}
-
-			public void keyReleased(KeyEvent e) {
-				// nothing
-			}       		
-		});
+		new Zone(this);
 
 		this.addMouseListener( new MouseAdapter() {	
 			public void mouseClicked(MouseEvent e) {	
@@ -65,15 +48,17 @@ abstract class AWolgonPanel extends JPanel {
 
 		this.addMouseMotionListener( new MouseMotionListener() {
 			public void mouseMoved(MouseEvent e) {
-				setLastMousePosition(e.getPoint());
-				
-				// TODO: this is a temporary, slow solution. Optimize.
-				for (Label l : labels.values()) {
+				// Optimize this more maybe
+				for (Label l : labels.values()) {			
 					if (l.contains(e.getPoint())) {
-						hoveredOver = l;
-						l.hover();
+						if (l != hoveredOver) {
+							if (hoveredOver != null) hoveredOver.unhover();
+							hoveredOver = l;
+							hoveredOver.hover();
+						}
 					}
-					else {
+					else if (l == hoveredOver) {
+						hoveredOver = null;
 						l.unhover();
 					}
 				}
@@ -89,15 +74,10 @@ abstract class AWolgonPanel extends JPanel {
 				setResized(true);
 			}	
 		});	
-		
-		
 	}
 
 	// redraws the panel and does whatever needs be done each frame
 	public abstract void update();
-	
-	// allows overriding of the behavior in the keyListener
-	public abstract void keyHandler(KeyEvent e);
 
 	//draws the panel
 	public void paintComponent(Graphics g) {
@@ -124,7 +104,7 @@ abstract class AWolgonPanel extends JPanel {
 			String parentZoneName) {
 		new Label(name, content, Color.WHITE, 30f, horz, vert, parentZoneName, this);
 	}
-	
+
 	// adds an existing label to the table (Rhymes!)
 	protected void addLabel(String key, Label value) {
 		labels.put(key, value);
@@ -140,17 +120,41 @@ abstract class AWolgonPanel extends JPanel {
 		resized = b;
 	}
 
-	protected Point getLastMousePosition() {
+	/*protected Point getLastMousePosition() {
 		return lastMousePosition;
 	}
 
 	protected void setLastMousePosition(Point to) {
 		lastMousePosition = to;
-	}
-
+	}*/
 
 	public void setLabelText(String labelName, String newText){
 		labels.get(labelName).setText(newText);
 	}
+
+	public void removeTemporaryLabels() {
+		if (tempLabelNames != null) for (String name : tempLabelNames) {
+			labels.remove(name);
+		}
+	}
+	
+	//
+	// IRECTANGLE METHODS
+	//
+	
+	public int getWidth() {
+		return Main.getBounds().width;
+	}
+	
+	public int getHeight() {
+		return Main.getBounds().height;
+	}
+	
+	// the following two return zero since a panel acts as the baseline for Zone positioning,
+	// thus its top corner must be (0, 0)
+	
+	public int getX() { return 0; }
+	
+	public int getY() { return 0; }
 
 }

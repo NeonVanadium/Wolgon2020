@@ -1,7 +1,6 @@
 package game;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 
 public class TitlePanel extends AWolgonPanel {
 
@@ -12,22 +11,18 @@ public class TitlePanel extends AWolgonPanel {
 
 	public TitlePanel() {
 		
-		addZone("Lower", new Zone(0, 3.0/5.0, "Whole", this));
+		getZone("WHOLE").splitHorizontally(1.0/2.0, "UPPER", "LOWER");
 		
 		new TypewriterLabel("TITLE", "W O L G O N", Color.MAGENTA, 100f, 
-				AlignmentLocation.HCenter, AlignmentLocation.VCenter, "Whole", this);
+				AlignmentLocation.HCenter, AlignmentLocation.VCenter, "WHOLE", this);
 		new Button("START_BUTTON", "begin", 20f, 
-				AlignmentLocation.HCenter, AlignmentLocation.Top, "Lower", this, 
+				AlignmentLocation.HCenter, AlignmentLocation.Top, "LOWER", this, 
 				new ButtonFunction() { public void run() { Main.setPanel(new MenuPanel()); } });
 		
 	}
 	
 	public void update() {
 		repaint();
-	}
-	
-	public void keyHandler(KeyEvent e) {
-		// nothing
 	}
 
 }

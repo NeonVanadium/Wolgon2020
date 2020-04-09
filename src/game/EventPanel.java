@@ -10,10 +10,4 @@ public class EventPanel extends AWolgonPanel {
 		//TODO
 	}
 
-	@Override
-	public void keyHandler(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

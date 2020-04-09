@@ -6,21 +6,31 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 
-class Label implements IPositioner {
+class Label implements IRectangle{
 
 	private String text;
 	private String wrappedText;
-	private Label parent;
+	private Label parent; // may be null, the label relative to which this is positioned
 	private AlignmentLocation vert;
 	private AlignmentLocation horz;
 	private Color color; //text color
 	private float fontSize;
-	private int width; //how wide the label is
-	private int height; //how tall the label is
+	private int width; //how wide the label is (set by wrapText())
+	private int height; //how tall the label is (set by wrapText())
 	private Zone zone;
-	private boolean textChanged = true; //has the text changed since the previous wrapping? If true, wrapText will be called
-	private int trueTop; 	// since the y position of the label is below the first line, 
-							// this stores the y-coord above the first line, for use in contains.
+	
+	// Has the text changed since the previous wrapping?  If true, wrapText will be called.
+	// This system is in place is because wrapText requires a graphics object which will not be present
+	// when calling setText.
+	private boolean textChanged = true; 
+	
+	// since the y position of the label is below the first line, this stores the y-coord above the first line, 
+	// for use in contains.
+	private int trueTop; 
+	
+	// if this label is an exit button or similar which needs to be deleted when the 
+	// displayed data is updated
+	private boolean isTemporary; 	
 
 	// abstraction constructor
 	private Label(String name, String text, Color color, float fontSize, AWolgonPanel panel) {
@@ -52,10 +62,9 @@ class Label implements IPositioner {
 		g.setFont(g.getFont().deriveFont(this.fontSize));
 		g.setColor(this.color);
 
-		if(/*resized ||*/this.textChanged) {
+		if(this.textChanged) {
 			this.wrapText(g);
 		}
-
 
 		String[] lines = this.wrappedText.split("\n");
 		for(int i = 0; i < lines.length; i++) {
@@ -186,7 +195,7 @@ class Label implements IPositioner {
 		case Bottom:
 			return (zone.getY() + zone.getHeight()) - (halfLineHeight + 2 * AWolgonPanel.BUFFER);
 		case VCenter:
-			return ((zone.getY() + zone.getHeight()) / 2) - halfLineHeight;
+			return zone.getY() + (zone.getHeight() / 2) - halfLineHeight;
 		default:
 			return 0;
 		}
@@ -197,11 +206,11 @@ class Label implements IPositioner {
 		switch(horz) {
 
 		case HCenter:
-			return ((zone.getX() + zone.getWidth()) / 2) - (getWidth() / 2);
+			return zone.getX() + (zone.getWidth() / 2) - (this.getWidth() / 2);
 		case Left:
-			return zone.getX(); 
+			return zone.getX() + AWolgonPanel.BUFFER; 
 		case Right:
-			return (zone.getX() + zone.getWidth()) - getWidth() ;
+			return (zone.getX() + zone.getWidth()) - this.getWidth() - AWolgonPanel.BUFFER;
 		default:
 			return 0;
 		}
@@ -218,6 +227,18 @@ class Label implements IPositioner {
 	public int getHeight() {
 		return height;
 	}
+	
+	public void makeTemporary() {
+		this.isTemporary = true;
+	}
+	
+	public boolean isTemporary() {
+		return this.isTemporary;
+	}
+	
+	//
+	// EMPTY FUNCTIONS FOR SUBCLASS FUNCTIONALITY
+	//
 	
 	// to be called when the mouse moves over this label. Empty on this class, but will be overridden on subclass Button.
 	public void hover() {

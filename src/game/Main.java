@@ -12,7 +12,7 @@ import javax.swing.Timer;
 public class Main {
 
 	public static final Rectangle BOUNDS = new Rectangle(0, 0, 1000, 800); // i'm sure this isn't good form but it is convenient.
-	public static final Dimension MIN_SIZE = new Dimension(500, 500);
+	public static final Dimension MIN_SIZE = new Dimension(800, 500);
 
 	/*
 	 * 	could not find a way to name these variables that didn't sound wrong so enjoy.
@@ -44,8 +44,8 @@ public class Main {
 			if (smallTicks == LARGE_TICK) {
 				smallTicks = 0;
 				c.incrementTime();
+				getCurPanel().update();
 			}
-
 		}
 	});
 

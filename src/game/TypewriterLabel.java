@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 // a label that animates the typing of its text contents whenever it acquires new text.
 public class TypewriterLabel extends Label {
-	
+
 	String fullText;
 	int typedCharacters;
 	private static final int TYPE_SPEED = 1; // how many characters per tick are written?
@@ -15,30 +15,30 @@ public class TypewriterLabel extends Label {
 		super(name, text, color, fontSize, horz, vert, zoneName, panel);
 		init(text);
 	}
-	
+
 	public TypewriterLabel(String name, String text, Color color, float fontSize, String otherLabelName,
 			AWolgonPanel panel) {
 		super(name, text, color, fontSize, otherLabelName, panel);
 		init(text);
 	}
-	
+
 	private void init(String fullText) {
 		this.fullText = fullText;
 		typedCharacters = 0;
 	}
 
 	protected void draw(Graphics g) {
-		if (typedCharacters < fullText.length()) {
+
+		if (typedCharacters <= fullText.length()) {
 			super.setText(fullText.substring(0, typedCharacters));
 			typedCharacters += TYPE_SPEED;
 		}
-		else {
-			super.setText(fullText);
-		}
-		
+
+
+
 		super.draw(g);
 	}
-	
+
 	public void setText(String s) {
 		fullText = s;
 		typedCharacters = 0;
